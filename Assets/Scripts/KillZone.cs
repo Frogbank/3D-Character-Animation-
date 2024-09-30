@@ -7,12 +7,14 @@ public class KillZone : MonoBehaviour
     public GameObject player;
     private Player playerScript;
 
-    void Start()
+    void Start() // gets player
     {
         playerScript = player.GetComponent<Player>();
     }
 
-    public void OnTriggerEnter(Collider other)
+
+    // turns player to ragdoll when it enters the trigger
+    public void OnTriggerEnter(Collider other) 
     {
         if (other.gameObject == player)
         {

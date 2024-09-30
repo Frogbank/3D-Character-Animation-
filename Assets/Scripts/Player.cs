@@ -18,17 +18,17 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     void Start()
     {
-
-
-
+        // gets animator and character controller
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
 
         Cursor.lockState = CursorLockMode.Locked;
 
+        // ignores collision between the player and ragdoll
         Physics.IgnoreLayerCollision(6, 7);
         Physics.IgnoreLayerCollision(6, 6);
 
+        // gets all rigidbodies in the ragdoll and sets them to kinematic
         rb = GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody ragdoll in rb)
         {
@@ -37,24 +37,26 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        // checks for the ground
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        // jumps - starts animation and adds velocity upwards
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             animator.ResetTrigger("jump");
             animator.SetTrigger("jump");
             velocity.y = 4f;
         }
-
+        // adds gravity if not grounded
         velocity.y += gravity * Time.deltaTime;
-
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
-
+        // adds vertical velocity
         characterController.Move(velocity * Time.deltaTime);
 
+        // increases speed when running and turns animations to running animations
         if (Input.GetKey(KeyCode.LeftShift))
         {
             running = true;
@@ -65,14 +67,18 @@ public class Player : MonoBehaviour
             running = false;
             moveSpeed = 5f;
         }
-        if(canMove)
+
+
+        if(canMove) // allows the player to move if not a ragdoll
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
 
             Vector3 move = transform.right * x + transform.forward * z;
             characterController.Move(move.normalized * moveSpeed * Time.deltaTime);
-            if(!running)
+
+
+            if(!running) // sets movement animations
             {
                 animator.SetFloat("velocityX", x * 0.5f);
                 animator.SetFloat("velocityY", z * 0.5f);
@@ -86,7 +92,7 @@ public class Player : MonoBehaviour
 
 
     }
-    public void Ragdoll()
+    public void Ragdoll() // turns the character to a ragdoll
     {
         canMove = false;
         animator.enabled = false;

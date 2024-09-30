@@ -5,13 +5,12 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
 
-    public float mouseSensitivity;
-
     public Transform player;
 
+    public float mouseSensitivity;
     public float xRotation;
 
-    void Update()
+    void Update() // camera rotation
     {
         float x = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float y = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
