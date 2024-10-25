@@ -16,6 +16,14 @@ public class Player : MonoBehaviour
     public float groundDistance;
     public LayerMask groundMask;
     private bool isGrounded;
+
+
+    // left then right
+    public GameObject dustParticles;
+    public Transform[] particleChecks;
+    public bool leftCheck = false;
+    public bool rightCheck = false;
+
     void Start()
     {
         // gets animator and character controller
@@ -91,6 +99,20 @@ public class Player : MonoBehaviour
         }
 
 
+        if (!leftCheck && Physics.CheckSphere(particleChecks[0].position, groundDistance, groundMask))
+        {
+            SpawnDustParticles(particleChecks[0].position);
+            leftCheck = true;
+        }
+
+        if (!rightCheck && Physics.CheckSphere(particleChecks[1].position, groundDistance, groundMask))
+        {
+            SpawnDustParticles(particleChecks[1].position);
+            rightCheck = true;
+        }
+
+        leftCheck = Physics.CheckSphere(particleChecks[0].position, groundDistance, groundMask);
+        rightCheck = Physics.CheckSphere(particleChecks[1].position, groundDistance, groundMask);
     }
     public void Ragdoll() // turns the character to a ragdoll
     {
@@ -102,5 +124,11 @@ public class Player : MonoBehaviour
         }
         Physics.IgnoreLayerCollision(6, 6, false);
     }
+
+    private void SpawnDustParticles(Vector3 pos)
+    {
+        Instantiate(dustParticles, pos, Quaternion.Euler(-90, 0, 0)); 
+    }
+
 
 }
