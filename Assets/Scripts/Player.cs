@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 public class Player : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class Player : MonoBehaviour
     private bool rightCheck = false;
     public float dustDistance;
 
+    public LineRenderer lineRenderer;
+    public float laserTime;
+    public Transform laserPos;
+
+
     void Start()
     {
         // gets animator and character controller
@@ -42,6 +48,8 @@ public class Player : MonoBehaviour
         {
             ragdoll.isKinematic = true;
         }
+        
+        lineRenderer.enabled = false;
     }
     void Update()
     {
@@ -101,10 +109,10 @@ public class Player : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Transform playerTransform = transform.GetChild(0);
             RaycastHit hit;
-            if(Physics.Raycast(playerTransform.position, playerTransform.forward, out hit))
+            if(Physics.Raycast(laserPos.position, laserPos.forward, out hit))
             {
+                StartCoroutine(Laser(hit.point));
                 Enemies enemy = hit.transform.gameObject.GetComponent<Enemies>();
                 if(enemy != null)
                 {
@@ -145,5 +153,12 @@ public class Player : MonoBehaviour
         Instantiate(dustParticles, pos, Quaternion.Euler(-90, 0, 0)); 
     }
 
-
+    private IEnumerator Laser(Vector3 hitPos)
+    {
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, laserPos.position);
+        lineRenderer.SetPosition(1, hitPos);
+        yield return new WaitForSeconds(laserTime);
+        lineRenderer.enabled = false;
+    }
 }
