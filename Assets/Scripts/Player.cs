@@ -18,11 +18,11 @@ public class Player : MonoBehaviour
     private bool isGrounded;
 
 
-    // left then right
     public GameObject dustParticles;
     public Transform[] particleChecks;
-    public bool leftCheck = false;
-    public bool rightCheck = false;
+    private bool leftCheck = false;
+    private bool rightCheck = false;
+    public float dustDistance;
 
     void Start()
     {
@@ -99,20 +99,35 @@ public class Player : MonoBehaviour
         }
 
 
-        if (!leftCheck && Physics.CheckSphere(particleChecks[0].position, groundDistance, groundMask))
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Transform playerTransform = transform.GetChild(0);
+            RaycastHit hit;
+            if(Physics.Raycast(playerTransform.position, playerTransform.forward, out hit))
+            {
+                Enemies enemy = hit.transform.gameObject.GetComponent<Enemies>();
+                if(enemy != null)
+                {
+                    enemy.LaserHit();
+                }
+            }
+        }
+
+
+        if (!leftCheck && Physics.CheckSphere(particleChecks[0].position, dustDistance, groundMask))
         {
             SpawnDustParticles(particleChecks[0].position);
             leftCheck = true;
         }
 
-        if (!rightCheck && Physics.CheckSphere(particleChecks[1].position, groundDistance, groundMask))
+        if (!rightCheck && Physics.CheckSphere(particleChecks[1].position, dustDistance, groundMask))
         {
             SpawnDustParticles(particleChecks[1].position);
             rightCheck = true;
         }
 
-        leftCheck = Physics.CheckSphere(particleChecks[0].position, groundDistance, groundMask);
-        rightCheck = Physics.CheckSphere(particleChecks[1].position, groundDistance, groundMask);
+        leftCheck = Physics.CheckSphere(particleChecks[0].position, dustDistance, groundMask);
+        rightCheck = Physics.CheckSphere(particleChecks[1].position, dustDistance, groundMask);
     }
     public void Ragdoll() // turns the character to a ragdoll
     {
