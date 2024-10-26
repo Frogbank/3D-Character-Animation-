@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
     public Transform laserPos;
     public GameObject laserSparks;
 
+    public BoxCollider kickTrigger;
+
 
     void Start()
     {
@@ -53,6 +55,8 @@ public class Player : MonoBehaviour
         }
         
         lineRenderer.enabled = false;
+
+        kickTrigger.enabled = false;
     }
     void Update()
     {
@@ -74,6 +78,21 @@ public class Player : MonoBehaviour
         }
         // adds vertical velocity
         characterController.Move(velocity * Time.deltaTime);
+
+
+        // kick
+        if(Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            canMove = false;
+
+            animator.ResetTrigger("Kick");
+            animator.SetTrigger("Kick");
+
+
+            StartCoroutine(Kick());
+        }
+
+
 
         // increases speed when running and turns animations to running animations
         if (Input.GetKey(KeyCode.LeftShift))
@@ -110,21 +129,23 @@ public class Player : MonoBehaviour
         }
 
 
+        // laser
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             RaycastHit hit;
             if(Physics.Raycast(laserPos.position, laserPos.forward, out hit))
             {
                 StartCoroutine(Laser(hit.point, hit.normal));
-                Enemies enemy = hit.transform.gameObject.GetComponent<Enemies>();
+                Enemies enemy = hit.transform.root.gameObject.GetComponent<Enemies>();
                 if(enemy != null)
                 {
-                    enemy.LaserHit();
+                    enemy.Ragdoll();
                 }
             }
         }
 
 
+        // dust particles
         if (!leftCheck && Physics.CheckSphere(particleChecks[0].position, dustDistance, groundMask))
         {
             SpawnDustParticles(particleChecks[0].position);
@@ -169,5 +190,16 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(laserTime);
         lineRenderer.enabled = false;
+    }
+
+    private IEnumerator Kick()
+    {
+        yield return new WaitForSeconds(1);
+
+        kickTrigger.enabled = true;
+
+        yield return new WaitForSeconds(1);
+        kickTrigger.enabled = false;
+        canMove = true;
     }
 }
