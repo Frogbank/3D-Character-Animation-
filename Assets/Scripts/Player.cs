@@ -159,9 +159,14 @@ public class Player : MonoBehaviour
     private IEnumerator Laser(Vector3 hitPos, Vector3 hitNormal)
     {
         lineRenderer.enabled = true;
+
         lineRenderer.SetPosition(0, laserPos.position);
         lineRenderer.SetPosition(1, hitPos);
-        Instantiate(laserSparks, hitPos + (hitNormal * 0.5f), Quaternion.identity);
+
+        GameObject sparks = Instantiate(laserSparks, hitPos + (hitNormal * 0.5f), Quaternion.identity);
+        Quaternion sparkRotation = Quaternion.LookRotation(hitNormal);
+        sparks.transform.rotation = sparkRotation;
+
         yield return new WaitForSeconds(laserTime);
         lineRenderer.enabled = false;
     }

@@ -856,7 +856,7 @@ MonoBehaviour:
   - {fileID: 2038508647}
   dustDistance: 0.2
   lineRenderer: {fileID: 876522905}
-  laserTime: 1
+  laserTime: 0.5
   laserPos: {fileID: 866402601}
   laserSparks: {fileID: 4362027165279879217, guid: ef64e485ca355dd4297aa9e1b1934685, type: 3}
 --- !u!95 &876522902
@@ -2198,7 +2198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 581354c831e6b504196916e58d681179, type: 3}
       propertyPath: m_Name
-      value: Y Bot
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 581354c831e6b504196916e58d681179, type: 3}
       propertyPath: m_Layer
