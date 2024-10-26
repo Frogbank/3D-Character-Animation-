@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 public class Player : MonoBehaviour
 {
+    [Header("Character Controller")]
     private Animator animator;
     private CharacterController characterController;
     private Rigidbody[] rb;
@@ -18,16 +19,18 @@ public class Player : MonoBehaviour
     public LayerMask groundMask;
     private bool isGrounded;
 
-
+    [Header("Dust Particles")]
     public GameObject dustParticles;
     public Transform[] particleChecks;
     private bool leftCheck = false;
     private bool rightCheck = false;
     public float dustDistance;
 
+    [Header("Laser")]
     public LineRenderer lineRenderer;
     public float laserTime;
     public Transform laserPos;
+    public GameObject laserSparks;
 
 
     void Start()
@@ -112,7 +115,7 @@ public class Player : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(laserPos.position, laserPos.forward, out hit))
             {
-                StartCoroutine(Laser(hit.point));
+                StartCoroutine(Laser(hit.point, hit.normal));
                 Enemies enemy = hit.transform.gameObject.GetComponent<Enemies>();
                 if(enemy != null)
                 {
@@ -153,11 +156,12 @@ public class Player : MonoBehaviour
         Instantiate(dustParticles, pos, Quaternion.Euler(-90, 0, 0)); 
     }
 
-    private IEnumerator Laser(Vector3 hitPos)
+    private IEnumerator Laser(Vector3 hitPos, Vector3 hitNormal)
     {
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(0, laserPos.position);
         lineRenderer.SetPosition(1, hitPos);
+        Instantiate(laserSparks, hitPos + (hitNormal * 0.5f), Quaternion.identity);
         yield return new WaitForSeconds(laserTime);
         lineRenderer.enabled = false;
     }
