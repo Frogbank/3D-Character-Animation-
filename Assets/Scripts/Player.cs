@@ -80,7 +80,6 @@ public class Player : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
 
 
-        // kick
         if(Input.GetKeyDown(KeyCode.Mouse1))
         {
             canMove = false;
@@ -129,7 +128,7 @@ public class Player : MonoBehaviour
         }
 
 
-        // laser
+
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             RaycastHit hit;
@@ -145,7 +144,6 @@ public class Player : MonoBehaviour
         }
 
 
-        // dust particles
         if (!leftCheck && Physics.CheckSphere(particleChecks[0].position, dustDistance, groundMask))
         {
             SpawnDustParticles(particleChecks[0].position);

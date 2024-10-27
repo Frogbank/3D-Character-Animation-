@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemies : MonoBehaviour
 {
     private Rigidbody[] ragdoll;
+    public bool alive;
     private void Start()
     {
         ragdoll = GetComponentsInChildren<Rigidbody>();
@@ -23,6 +24,8 @@ public class Enemies : MonoBehaviour
         collider.enabled = false;
         Animator animator = GetComponent<Animator>();
         animator.enabled = false;
+
+        alive = false;
 
         foreach (Rigidbody rb in ragdoll)
         {
